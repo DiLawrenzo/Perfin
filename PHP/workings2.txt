@@ -1,0 +1,41 @@
+MAAJABU SYSTEMS
+>	Expense														> Income												> Transfer
+	-  Amount														- Amount												- From *
+	- Category														- Category											- To *
+	- Account														- Account											- Amount
+	- Project/title													- Project/title										- Project		
+	- Payee	*														- Payer	*											- Periodic
+	- Periodic														- Periodic											- .
+	- JobId/receipt *																- 
+	
+> Task/Job														> Clients													> Investment
+	- Title 																- Account											- Amount
+	- Date																- 															- Category
+	- 																		- Account											- Account
+	- Status															- Debt													- Project/Title
+	- Date																- Status												- Return
+	- 																		- o														- Description 				
+	- Description																										
+	 
+	
+> Accounts														> Profile																	
+	- Name															- Name	-Email
+	- Amount															- Occupation/Field
+	- Modified														- Balance
+	- 																		- Type [biz,person]
+	- Type																- Rank														- Return
+	
+	> Category
+	-: Income [salary, part-time job, repayment, gift, sales, other]
+	-: Investment [time deposit, stock, futures, funds]
+	-: Expenses [Food, Clothing, Living, Transportation, Education, Entertainment, Electronics, Publications,Car/Motor, Medical, Social, Investment, Salaries, Other]
+	
+	
+		START
+			\/
+		ADMIN															USER
+	-VIEW JOBS(view supp,status)						- STATE JOB (category, description,date)
+	-VIEW LORRY(add lorry,assign lorry)			- STATE CLIENT(name)
+	-ADD ADMIN	(add staff, name, type)			- STATE PRODUCT(name,size,quantity)
+	- contol centre (update jobs, supp, client)		- View JOBS (complete,pending)
+	- VIEW FINANCES

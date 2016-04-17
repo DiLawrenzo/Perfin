@@ -1,0 +1,36 @@
+<ion-view view-title="Friends">
+  <ion-content>
+  <div class="list card text-center">
+      <div class="item item-divider">Add an Income</div>
+      <div class="item item-body calm">
+        <div class="">
+          <label class="item item-input">
+              <input type="text" placeholder="Amount" ng-model="data.amounti">
+          </label>
+          <label class="item item-input">
+            <input type="text" 
+            placeholder="Pick date" 
+            ng-model="datepicker" 
+            name="datepicker" 
+            ng-click="opendateModal()" 
+            readonly>
+          </label>
+          <label class="item item-input">
+              <input type="text" placeholder="Payer" ng-model="data.payee">
+          </label>
+          <label class="item item-input">
+              <textarea type="text" placeholder="Notes" ng-model="data.notesi"lo></textarea> >
+          </label>
+          <button class="button button-block button-calm" ng-click="">Add</button>
+          <h1><b>20,500</b></h1>
+        </div>
+      </div>
+    </div>
+    <ion-list>
+      <ion-item class="item-avatar" ng-repeat="friend in friends" type="item-text-wrap" href="#/tab/friend/{{friend.id}}">
+        <img ng-src="{{friend.face}}">
+        <h2>{{friend.name}}</h2>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

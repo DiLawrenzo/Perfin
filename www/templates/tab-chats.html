@@ -1,0 +1,42 @@
+<ion-view view-title="Chats">
+  <ion-content>
+    <div class="list card text-center">
+      <div class="item item-divider">Add an Expense</div>
+      <div class="item item-body calm">
+        <div class="">
+          <label class="item item-input">
+              <input type="text" placeholder="Amount" ng-model="data.amount">
+          </label>
+          <label class="item item-input">
+            <input type="text" 
+            placeholder="Pick date" 
+            ng-model="datepicker" 
+            name="datepicker" 
+            ng-click="opendateModal()" 
+            readonly>
+          </label>
+          <label class="item item-input">
+              <input type="text" placeholder="Payer" ng-model="data.payer">
+          </label>
+          <label class="item item-input">
+              <textarea type="text" placeholder="Notes" ng-model="data.notes"lo></textarea> >
+          </label>
+          <button class="button button-block button-calm" ng-click="">Add</button>
+          <h1><b>20,500</b></h1>
+        </div>
+      </div>
+    </div>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
+        <img ng-src="{{chat.face}}">
+        <h2>{{chat.name}}</h2>
+        <p>{{chat.lastText}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+
+        <ion-option-button class="button-assertive" ng-click="remove(chat)">
+          Delete
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
