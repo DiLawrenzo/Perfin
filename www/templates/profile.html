@@ -1,0 +1,90 @@
+<ion-view view-title="Home">
+    <ion-content ng-class="{expanded:$scope.isExpanded}">
+        <div class="hero slide-up" style="background-image: url('img/profile-bg.jpg');">
+            <div class="content">
+                <div class="avatar" style="background-image: url('img/daenerys.jpg');"></div>
+                <h3><a class="light">Levis Lawrence</a></h3>
+                <h4>perfin_user</h4>
+            </div>
+        </div>
+        <div class="tabs tabs-dark tabs-icon-top static">
+            <a ui-sref="app.income" class="tab-item">
+                <i class="icon ion-arrow-graph-up-right"></i> Incomes
+            </a>
+            <a ui-sref="app.expense" class="tab-item">
+                <i class="icon ion-pie-graph"></i> Expenses
+            </a>
+            <a ui-sref="app.account" class="tab-item">
+                <i class="icon ion-cash"></i> Accounts
+            </a>
+            <a ui-sref="app.saving" class="tab-item">
+                <i class="icon ion-briefcase"></i> Savings
+            </a>
+        </div>
+        <h4 class="content padding double-padding-x text-center dark">Dashboard</h4>
+            <div class="list card text-center">
+              <div class="item item-divider">Status</div>
+              <div class="">
+                <div class=""> 
+                    <p class=" " >Current Worth</p>               
+                    <h1 class="dark">
+                      <strong>{{totals()}}</strong>/-</h1>
+                    
+                    </div>
+              </div>
+            </div>
+            <div class="list card text-center">
+              <div class="item item-divider">Overview</div>
+                  <div class="">
+                    <div class="row">
+                        <div class="col-10"></div>
+                      <div class="col-20">
+                          <p> Total Income</p>
+                         </div>
+                         <div class="col-50">
+                           <h1 class="dark">
+                            <strong>{{itotals()}}</strong>/-</h1> 
+                         </div>          
+                    </div>
+                  </div>
+                  <div class="">
+                    <div class="row">
+                        <div class="col-10"></div>
+                      <div class="col-20">
+                          <p> Total Expenses</p>
+                         </div>
+                         <div class="col-50">
+                           <h1 class="dark">
+                            <strong>{{etotals()}}</strong>/-</h1> 
+                         </div>          
+                    </div>
+                    
+                  </div>
+                  <div class="">
+                    <div class="row">
+                        <div class="col-10"></div>
+                      <div class="col-20">
+                          <p> Total Savings</p>
+                         </div>
+                         <div class="col-50">
+                           <h1 class="dark">
+                            <strong>{{stotals()}}</strong>/-</h1> 
+                         </div>          
+                    </div>
+                  </div>
+            </div>
+            <div class="list animate-fade-slide-in-right">                
+                <div class="column-sort">
+                      <i ng-class="{'ion-chevron-up' : data.sortReverse === false, 'ion-chevron-down' : data.sortReverse === true} " ng-if="data.sortOn === column.id"></i>
+                </div>
+            </div>
+            <div class="list card">
+              <div class="item item-divider">Upcoming</div>
+              <div class="item item-body">
+                <div>
+                  You have <b>2 {{up.expense}}</b> expenses on your calendar tomorrow.
+                </div>
+              </div>
+            </div>
+    </ion-content>
+</ion-view>

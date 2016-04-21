@@ -1,0 +1,38 @@
+<ion-view view-title="Register" name="signup">
+    <ion-content style="background: url(img/login.jpg) center; background-size: cover;">
+        <div class="hero header flat">
+            <div class="content ">
+            <div class="app-icon"></div>
+              <h2 class="dark">Signup</h2>
+            </div>
+        </div>
+        
+          <div class="list ">      
+              <label class="item item-input">
+                  <ion-md-input type="text" placeholder="Username" ng-model="signdata.username">
+                  </ion-md-input>
+              </label>
+              <label class="item item-input">
+                  <ion-md-input type="email" placeholder="Email" ng-model="signdata.email"></ion-md-input>
+              </label>
+              <label class="item item-input">
+                  <ion-md-input type="password" placeholder="Password" ng-model="signdata.password">
+                  </ion-md-input>
+              </label>
+              <label class="item item-input">
+                <label class="item-light">Choose a User type &nbsp; </label>
+                <select class="item item-light item-input form-control " ng-model="signdata.type" placeholder="User type">              
+                    <option class="" value="business">Business</option>
+                    <option class="" value="individual">Individual</option>  
+                </select> 
+              </label>
+          </div>
+          <div class="padding">
+            <button ui-sref="app.signup" class="button button-block button-positive"  ng-click="signup()">Register</button>
+            
+            <span  >Already a user?</span> 
+            <div class="button button-cool button-block" ui-sref="app.login"> Login</div>
+          </div>
+            
+  </ion-content>
+</ion-view>

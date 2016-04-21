@@ -1,0 +1,59 @@
+<ion-nav-button side="right">
+    <button class="button button-right ion-log-out button-stable" ng-click="logout()">Logout</button>
+  </ion-nav-button>
+<ion-view view-title="Incomes">  
+  
+  <ion-content>
+  <div class="list card text-center">
+      <div class="item item-divider">Add an Income</div>
+      <div class="item item-body calm">
+        <div class="">
+        <form ng-submit="submit()">
+          <label class="item item-input">
+              <input type="number" placeholder="Amount" ng-model="data.amount">
+          </label>
+          <label class="item item-input">
+            <input type="text" 
+            placeholder="Pick date" 
+            ng-model="datepicker"
+            ng-controller="DatepickerCtrl" 
+            name="datepicker" 
+            ng-click="opendateModal()" 
+            readonly>
+          </label>
+          <label class="item item-input">
+              <input type="text" placeholder="Name" ng-model="data.title">
+          </label>
+          <label class="item item-input">
+              Account  &nbsp; <select class="item item-input form-control" ng-model="data.account">
+                <option value="family bank">Family Bank</option>
+                <option value="mpesa">M-Pesa</option>
+                <option value="equity bank">Equity Bank</option>
+                <option value="cash">Cash</option>
+              </select>
+          </label>
+          <label class="item item-input">
+              <textarea type="text" placeholder="Notes" ng-model="data.notes"lo></textarea> 
+          </label>
+          <button class="button button-block button-calm" type="submit" >Add</button>
+          Total: <h1><b>{{totals()}}</h2>
+        </form>
+        </div>
+      </div>
+    </div>
+    <ion-list>    
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="income in incomes " type="item-text-wrap" href="#/tab/friends/{{income.id}}">
+        <img ng-src="" alt="{{income.id}}">
+        <h2>{{income.iname}}</h2>
+        <p><b>{{income.amount}}</b> &nbsp; &nbsp;&nbsp; {{income.date}}
+        &nbsp; &nbsp;&nbsp; {{income.account}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+
+        <ion-option-button class="button-assertive" ng-click="remove(income)">
+          Delete
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+    
+  </ion-content>
+</ion-view>

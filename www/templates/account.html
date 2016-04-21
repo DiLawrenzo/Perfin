@@ -1,0 +1,72 @@
+<ion-view view-title=" Accounts">
+    <ion-content ng-class="{expanded:isExpanded}" >
+        <div class="list card text-center">
+          <h3 class="">Add an  account</h3>
+            <div class="item item-body ">
+                <div class="item card-item card-stable  ">
+                    <form ng-submit="submit()">
+                      <label class="item item-input">
+                          <input class="form-control" type="number" placeholder="Amount" ng-model="data.amount"></input>
+                      </label>
+                      <label class="item item-input">
+                        <input type="text" 
+                        placeholder="Pick date" 
+                        ng-model="datepicker"
+                        ng-controller="DatepickerCtrl" 
+                        name="datepicker" 
+                        ng-click="opendateModal()" 
+                        readonly>
+                      </label>
+                      <label class="item item-input">
+                          <input type="text" placeholder="Name" ng-model="data.title">
+                      </label>
+                      <label class="item item-input">
+                          Type  &nbsp; <select class="item item-input form-control" ng-model="data.type">
+                            <option value="personal">Personal</option>
+                            <option value="business">Business</option>
+                            <option value="bank">Bank</option>
+                            <option value="mobile">Mobile</option>
+                          </select>
+                      </label>
+                      <label class="item item-input">
+                          <textarea type="text" placeholder="Notes" ng-model="data.notes"lo></textarea> 
+                      </label>
+                      <button class="button button-block button-calm ink ink-dark" type="submit" >Add</button>
+                      
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+        <div ui-sref="app.gallery" class="card ">
+        <ion-list>    
+          <ion-item class="item stable-bg card ink ink-dark animate-fade-slide-in" ng-repeat=" account in  accounts " type="item-text-wrap" >
+                <div class="item item-avatar item-text-wrap">
+                    <span class="avatar" style="background-image: url('img/jon-snow.jpg');" alt=""></span>
+                    <span>{{ account.id}}. &nbsp;
+                     <strong>{{ account.iname}}</strong>
+                      &nbsp; - &nbsp; <strong>{{ account.amount}}</strong>
+                    </span>
+
+                    <ion-option-button class="button-assertive" ng-click="remove( account)">
+                      Delete
+                    </ion-option-button>
+                    <div class="card-footer text-right">
+                        <span><i class="icon ion-chevron-right icon-accessory"></i></span>
+                        <div class="pull-left">
+                            <i class="icon ion-clock"></i> {{ account.date}} 
+                        </div>
+                    </div>
+                </div>
+                        
+          </ion-item>
+          </div>
+        </ion-list>
+        <div class="item card-item">
+            <div ui-sref="app.gallery" class="card stable-bg ink ink-dark">
+                
+            </div>
+        </div>
+        
+    </ion-content>
+</ion-view>

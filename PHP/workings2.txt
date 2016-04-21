@@ -9,21 +9,20 @@ MAAJABU SYSTEMS
 	- JobId/receipt *																- 
 	
 > Task/Job														> Clients													> Investment
-	- Title 																- Account											- Amount
+	- Title 																- Name  												- Amount
 	- Date																- 															- Category
-	- 																		- Account											- Account
-	- Status															- Debt													- Project/Title
+	- 																		- 											- Account
+	- Status															- balance													- Project/Title
 	- Date																- Status												- Return
 	- 																		- o														- Description 				
 	- Description																										
 	 
 	
-> Accounts														> Profile																	
-	- Name															- Name	-Email
-	- Amount															- Occupation/Field
-	- Modified														- Balance
-	- 																		- Type [biz,person]
-	- Type																- Rank														- Return
+> Accounts														> Profile									>Users												
+	- Name															- userid*									- Name	-Email						
+	- Amount															- Occupation/Field					- Username
+	- Modified														- Balance								- Type [biz,person]
+	- Type [biz,personal,bank,mobile]																- 												- Rank
 	
 	> Category
 	-: Income [salary, part-time job, repayment, gift, sales, other]

@@ -1,0 +1,48 @@
+<ion-view view-title="Accounts">
+  <ion-nav-button side="right">
+    <button class="button icon-left ion-log-out button-stable" ng-click="logout()">Logout</button>
+  </ion-nav-button>
+
+  <ion-content>
+    <div class="list card text-center">
+    <form ng-submit="submit()">
+      <div class="item item-divider">Add an Account</div>
+      <ion-item class="item-toggle">
+        Enable Account Tracking
+        <label class="toggle">
+          <input type="checkbox" ng-model="settings.enableViews">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </ion-item>      
+      <ion-item>
+        <form ng-submit="submit()">
+        <label class="item item-input">
+              <input type="text" placeholder="Account Name" ng-model="data.payee">
+          </label>
+        <label class="item item-input">
+              <input type="number" placeholder="Amount" ng-model="data.amount">
+          </label>
+        <label class="item item-input">
+              <textarea type="text" placeholder="Notes" ng-model="data.notesi"lo></textarea> 
+          </label>
+          <button class="button button-block button-calm" ng-click="">Add</button>      
+      </ion-item>
+      </form>
+      </div>
+      <div class="item item-divider">Edit An Account</div>
+      <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="view in views" type="item-text-wrap" href="#/tab/account/{{view.id}}">
+        <img ng-src="" alt="{{view.id+1}}">
+        <h2>{{view.name}}</h2>
+        <p><b>{{view.amount}}</b> &nbsp; &nbsp;&nbsp; {{view.date}}
+        &nbsp; &nbsp;&nbsp; {{view.type}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+        <ion-option-button class="button-assertive" ng-click="remove(view)">
+          Delete
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

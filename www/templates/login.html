@@ -1,13 +1,35 @@
-<ion-view view-title="Login" name="login-view">
-  <ion-content class="padding">
-      <div class="list list-inset">
-          <label class="item item-input">
-              <input type="text" placeholder="Username" ng-model="data.username">
-          </label>
-          <label class="item item-input">
-              <input type="password" placeholder="Password" ng-model="data.password">
-          </label>
-      </div>
-      <button class="button button-block button-calm" ng-click="login()">Login</button>
-  </ion-content>
+<ion-view view-title="Login" align-title="left">
+    <ion-content style="background: url(img/login.jpg) center; background-size: cover;">
+        <div class="hero no-header flat">
+            <div class="content ">
+                <div class="app-icon"></div>
+                <h1 class="dark">Perfin</h1>
+            
+            </div>
+        </div>
+        <div class="list">
+            <ion-md-input placeholder="Username" highlight-color="stable" type="text" ng-model="data.username" required></ion-md-input>
+            <ion-md-input placeholder="Password" highlight-color="energized" type="password" ng-model="data.password" required></ion-md-input>
+        </div>
+        <div class="padding">
+            <button  class="button button-full button-assertive ink" ng-click="login()">Login</button>
+            <div>
+            <p>Or</p>
+            <button ui-sref="app.signup" class="button button-block button-cool"  >Register Here</button>
+          </div>
+        </div>
+        <div class="content">
+            <div class="list padding ">
+                
+            </div>
+        </div>
+        <div class="button-bar button-full social-login button-bottom">
+            
+        </div> 
+        <div class="button-bar social-login">
+            <button class="button button-small button-border icon-left  button-dark">
+                <p>A product of Larry Developers</p>
+            </button>
+        </div>
+    </ion-content>
 </ion-view>
