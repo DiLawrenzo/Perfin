@@ -3,7 +3,7 @@
 
 angular.module('starter.controllers', ['pickadate'])
 
-.controller('AppCtrl', function($scope, $state,  $ionicModal, $ionicPopover, $ionicPopup, $timeout) {
+.controller('AppCtrl', function($scope, $state,  $ionicModal, $ionicPopover, $ionicPopup, $timeout, SessionService, AUTH_EVENTS) {
     // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -65,14 +65,11 @@ angular.module('starter.controllers', ['pickadate'])
             if (!content[i].classList.contains('has-header')) {
                 content[i].classList.toggle('has-header');
             }
-        }
-
-    };
+        }};
 
     $scope.hideHeader = function() {
         $scope.hideNavBar();
-        $scope.noHeader();
-    };
+        $scope.noHeader();};
 
     $scope.showHeader = function() {
         $scope.showNavBar();
@@ -86,13 +83,35 @@ angular.module('starter.controllers', ['pickadate'])
         }
     };
 
-    $scope.logout = function() {
-        var alertPopup = $ionicPopup.alert({
-          title: 'Logged Out',
-          template: 'You have been logged out'
-        }); 
-        $state.go('app.login')
-    }
+    //$scope.usertype = SessionService.loadUserSession();
+
+    // $scope.$on(AUTH_EVENTS.notAuthorised, function(event) {
+    //   var alertPopup = $ionicPopup.alert({
+    //     title: 'Unauthorized!',
+    //     template: 'You are not allowed to access this page!'
+    //   });
+    // });
+    
+    // $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
+    //   SessionService.logout();      
+    //   var alertPopup = $ionicPopup.alert({
+    //     title: 'Session Error!',
+    //     template: 'You have to login again!'
+    //   });
+    //   $state.go('app.login');
+    // });
+
+    // $scope.setUsertype = function(type) {
+    //   //var type = type;
+    //   $scope.usertype = type;
+    // };
+    // $scope.logout = function() {
+    //     var alertPopup = $ionicPopup.alert({
+    //       title: 'Logged Out',
+    //       template: 'You have been logged out'
+    //     }); 
+    //     $state.go('app.login')
+    // };
 })
 
 .controller('DatepickerCtrl', function($scope, $rootScope, $ionicModal, DateService) {    
@@ -127,7 +146,7 @@ angular.module('starter.controllers', ['pickadate'])
     //ionicMaterialInk.displayEffect();
 
     $scope.data = {};
-    $scope.type = "individual";
+    //$scope.type = "individual";
     
     $scope.login = function() {
       //console.log($scope.data.username);
@@ -137,12 +156,11 @@ angular.module('starter.controllers', ['pickadate'])
                 template: 'Please fill in all your details!'
             }); 
     } else {
-        LoginService.loginUser($scope.data.username, $scope.data.password, $scope.type)
-        .success(function(data) {
-          //$state.go('app.profile');
-          console.log(data % 1);
+        LoginService.loginUser($scope.data.username, $scope.data.password)
+        .success(function(data) {          
+          //console.log(data % 1);
           if (data % 1 === 0 ) {
-            console.log(data);
+            //console.log(data);
             var alertPopup = $ionicPopup.alert({
                 title: 'Login success!',
                 template: 'Welcome to Perfin!'
@@ -226,7 +244,7 @@ angular.module('starter.controllers', ['pickadate'])
     ionicMaterialInk.displayEffect();
 })
 
-.controller('ProfileCtrl', function($scope, $state, $stateParams, SavingService,ExpenseService, IncomeService, $timeout, ionicMaterialMotion, ionicMaterialInk) {
+.controller('ProfileCtrl', function($scope, $state, $stateParams, $ionicPopup, SavingService,ExpenseService, IncomeService, SessionService, $timeout, ionicMaterialMotion, ionicMaterialInk) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -250,14 +268,37 @@ angular.module('starter.controllers', ['pickadate'])
     // Set Ink
     ionicMaterialInk.displayEffect();
 
+    $scope.add = function(){
+        $scope.data = {};
+        var alertPopup = $ionicPopup.show({
+            title: 'Add Something!',
+            subTitle: 'Choose one',
+            templateUrl: 'templates/addinc.html',
+            scope: $scope,
+
+            buttons: [
+            { text: 'Cancel'}
+             
+            ]
+        }); 
+
+        $timeout(function() {
+        alertPopup.close();
+          }, 5000);
+
+        alertPopup.then(function(res) {
+            console.log('Tapped!', res)
+        });
+    };
     IncomeService.getTotal().then(function(data) {
       
       var total = 0; 
       $scope.incomes = data;
-      for (var i = 0; i < $scope.incomes.length; i++) {     
-      total += parseInt($scope.incomes[i].amount); 
-          
+      if ($scope.incomes.length > 0) {
+        for (var i = 0; i < $scope.incomes.length; i++) {     
+        total += parseInt($scope.incomes[i].amount);             
         } ;
+      }
       IncomeService.getToday().then(function(data) {
       
       var total = 0; 
@@ -273,10 +314,11 @@ angular.module('starter.controllers', ['pickadate'])
         
         var total = 0; 
         $scope.expenses = data; 
+        if ($scope.expenses.length > 0) {
         for (var i = 0; i < $scope.expenses.length; i++) {   
-        total += parseInt($scope.expenses[i].amount); 
-            
+        total += parseInt($scope.expenses[i].amount);             
          };
+        }
         ExpenseService.getTotal().then(function(data) {
           var date = new Date();
           
@@ -295,11 +337,14 @@ angular.module('starter.controllers', ['pickadate'])
 
     SavingService.getTotal().then(function(data) {
         
-        var total = 15000; 
-        $scope.expenses = data;
-        //for (var i = 0; i < $scope.expenses.length; i++) {   
-        //total += parseInt($scope.expenses[i].amount); }
-         
+        var total = 0; 
+        $scope.saving = data;
+        if ($scope.saving.length > 0) {
+          for (var i = 0; i < $scope.saving.length; i++) {   
+          total += parseInt($scope.saving[i].amount); }
+        }
+        else {  total = 0; }
+        console.log($scope.saving) ;
         $scope.stotals = function() { return total;}      
       });
 
@@ -322,7 +367,7 @@ angular.module('starter.controllers', ['pickadate'])
     };
 })
 
-.controller('AccountCtrl', function($scope,$state, DateService, AccountService, $stateParams, $timeout, $ionicPopup, ionicMaterialMotion, ionicMaterialInk) {
+.controller('AccountCtrl', function($scope,$state, DateService, AccountService, SessionService, $stateParams, $timeout, $ionicPopup, ionicMaterialMotion, ionicMaterialInk) {
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
@@ -400,11 +445,94 @@ angular.module('starter.controllers', ['pickadate'])
 
       $scope.logout = function() {
         SessionService.logout();
-        $state.go('login');
+        $state.go('app.login');
        }
 })
 
-.controller('ExpenseCtrl', function($scope,$state, DateService, ExpenseService, $stateParams, $timeout, $ionicPopup, ionicMaterialMotion, ionicMaterialInk) {
+.controller('SavingCtrl', function($scope,$state, DateService, SavingService, SessionService, $stateParams, $timeout, $ionicPopup, ionicMaterialMotion, ionicMaterialInk) {
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
+
+    $timeout(function() {
+        ionicMaterialMotion.fadeSlideIn({
+            selector: '.animate-fade-slide-in .item'
+        });
+    }, 200);
+
+    // Activate ink for controller
+    ionicMaterialInk.displayEffect();
+
+    $scope.data = {};
+    SavingService.getSaving() 
+        .then(function(data) {
+          console.log('Response receieved');
+          $scope.incomes = data;
+                
+          $scope.all = function() {
+          return incomes;
+          };
+          $scope.remove = function(income) {
+            incomes.splice(incomes.indexOf(income), 1);
+          };  
+        }); 
+        
+        var total = 0;
+        SavingService.getTotal().then(function(data) {      
+           
+          $scope.expenses = data;
+          for (var i = 0; i < $scope.expenses.length; i++) {   
+          total += parseInt($scope.expenses[i].amount); 
+              
+            } 
+          $scope.totals = function() { return total;}    
+        });
+
+        SavingService.getToday().then(function(data) {
+          
+          var total = 0; 
+          total = data;  
+           console.log(total);       
+          
+        });
+
+        $scope.submit = function() { 
+        if (!$scope.data.title ){
+        var alertPopup = $ionicPopup.alert({
+                title: 'Fields Empty!',
+                template: 'Please fill in all details!'
+            });  
+        } else {
+            $scope.date = DateService.getDate();
+            $scope.incomes = [];
+            SavingService.addSaving($scope.data.amount, $scope.date, $scope.data.title, $scope.data.type, $scope.data.notes) 
+              .success(function(data) {
+                var alertPopup = $ionicPopup.alert({
+                title: 'Success!',
+                template: 'Saving added Successfully!'
+                });   
+                $state.go('app.profile');
+              })
+              .error(function(data) { 
+               var alertPopup = $ionicPopup.alert({
+                title: 'Failed!',
+                template: 'Please try again!'
+            });  
+              });
+        } 
+        
+      };
+
+
+      $scope.logout = function() {
+        SessionService.logout();
+        $state.go('app.login');
+       }
+})
+
+.controller('ExpenseCtrl', function($scope,$state, DateService, ExpenseService, SessionService, $stateParams, $timeout, $ionicPopup, ionicMaterialMotion, ionicMaterialInk) {
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
@@ -481,11 +609,11 @@ angular.module('starter.controllers', ['pickadate'])
       };
     $scope.logout = function() {
       SessionService.logout();
-      $state.go('login');
+      $state.go('app.login');
      }
 })
 
-.controller('IncomeCtrl', function($scope,$state, DateService, IncomeService, $stateParams, $timeout, $ionicPopup, ionicMaterialMotion, ionicMaterialInk) {
+.controller('IncomeCtrl', function($scope,$state, DateService, IncomeService, SessionService, $stateParams, $timeout, $ionicPopup, ionicMaterialMotion, ionicMaterialInk) {
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
@@ -563,11 +691,11 @@ angular.module('starter.controllers', ['pickadate'])
 
       $scope.logout = function() {
         SessionService.logout();
-        $state.go('login');
+        $state.go('app.login');
        }
 })
 
-.controller('GalleryCtrl', function($scope,$state, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
+.controller('GalleryCtrl', function($scope,$state, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, SessionService) {
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;

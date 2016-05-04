@@ -3,7 +3,7 @@
 	include "checks.php";
 	
 	
-		$ds = $h->getTotIncome();
+		$ds = $h->getTotSaving();
 
 		if ($ds) {
 			//$ds = implode(';', $ds);

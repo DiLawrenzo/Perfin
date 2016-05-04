@@ -1,5 +1,6 @@
 <ion-view view-title="Home">
     <ion-content ng-class="{expanded:$scope.isExpanded}">
+      <button id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900" ng-click="add()"><i class="icon ion-plus"></i></button>
         <div class="hero slide-up" style="background-image: url('img/profile-bg.jpg');">
             <div class="content">
                 <div class="avatar" style="background-image: url('img/daenerys.jpg');"></div>
@@ -22,7 +23,9 @@
             </a>
         </div>
         <h4 class="content padding double-padding-x text-center dark">Dashboard</h4>
+
             <div class="list card text-center">
+              
               <div class="item item-divider">Status</div>
               <div class="">
                 <div class=""> 
@@ -86,5 +89,6 @@
                 </div>
               </div>
             </div>
+
     </ion-content>
 </ion-view>

@@ -2,19 +2,87 @@
 'use strict';
 
 angular.module('starter.services', [])
+.service('SessionService', function($http, $q, USER_ROLES) {
+    var LOCAL_TOKEN = "Authentic";
+    var isAuthenticated = false;
+    var usertype = '';
+    var role = '';
+    var authToken;
 
-.service('LoginService', function($q , $http  ) {
+    function sessionStorage(token) {
+        window.localStorage.setItem(LOCAL_TOKEN, token);
+        useSession(token);
+        console.log(token);
+    };
+
+    function loadUserSession(){
+      var token = window.localStorage.getItem(LOCAL_TOKEN);
+      if (token) {
+        useSession(token);
+      }
+    };
+
+    function useSession(token) {
+        usertype = token;
+        isAuthenticated = true;
+        authToken = token;
+
+        if (usertype == 'business') {
+          role = USER_ROLES.business;
+        }
+        if (usertype == 'individual') {
+          role = USER_ROLES.individual;
+        }
+        $http.defaults.headers.common['X-Auth-Token'] = token;
+    };
+
+    function destroySession(){
+      authToken = undefined;
+      usertype = '';
+      isAuthenticated = false;
+      $http.defaults.headers.common['X-Auth-Token'] = undefined;
+      window.localStorage.removeItem(LOCAL_TOKEN, token);
+    }
+
+    var logout = function(){
+        destroySession();
+    };
+
+    var isAuthorised = function(authorizedRoles){
+        if (!angular.isArray(authorizedRoles)){
+          authorizedRoles = [authorizedRoles];
+        }
+        return (isAuthenticated && authorizedRoles.indexOf(role) !== -1);
+    };
+
+    loadUserSession();
+
+    return {
+      //login: LoginService,
+      logout: logout,
+      isAuthorised: isAuthorised,
+      isAuthenticated: function() {
+        return isAuthenticated;
+      },
+      role: function (){return role;}
+    };
+
+})
+.service('LoginService', function($q , $http , SessionService) {
     return {
         loginUser: function(name, password, type) {
             var deferred = $q.defer();
             var promise = deferred.promise;
-            var data = { name, password, type};
+           // var userid = 
+            var data = { name, password/*, type*/};
 
             if (name !== '' && password !== '') {
                 $http.post("http://localhost/Mine/PerFinance/www/app/login.php", data)
                     .success(function(response) { 
-                     //  sessionStorage(type + '.Authentic');
-                          deferred.resolve(response);
+                          console.log(response[0]);
+                          var sessType = response[1]; 
+                          //SessionService.sessionStorage(sessType);
+                          deferred.resolve(response[0]);
                       //  deferred.resolve();
                       
                     }).error(function(response) {    
@@ -114,6 +182,7 @@ angular.module('starter.services', [])
           var data = [];
           $http.get("http://localhost/Mine/PerFinance/www/app/getincome.php", data)
               .success(function(response) { 
+                console.log(response);
                   deferred.resolve( response);
               })
               .error(function(error) {    
@@ -148,7 +217,7 @@ angular.module('starter.services', [])
           var data = [];
           $http.get("http://localhost/Mine/PerFinance/www/app/getitoday.php", data)
               .success(function(incomes) {
-                console.log(incomes); 
+                //console.log(incomes); 
                 deferred.resolve(incomes);
               
               })
@@ -167,12 +236,12 @@ angular.module('starter.services', [])
   // Might use a resource here that returns a JSON array  
   return {
         
-        addIncome: function(amount, date, title, account, notes) {
+        addSaving: function(amount, date, title, account, notes) {
             var deferred = $q.defer();
             var promise = deferred.promise;
             var data = { amount, date, title, account, notes};            
             if (amount !== '' && title !== '' && account !== '') {
-                $http.post("http://localhost/Mine/PerFinance/www/app/income.php", data)
+                $http.post("http://localhost/Mine/PerFinance/www/app/saving.php", data)
                     .success(function(response) { 
                      //  sessionStorage(type + '.Authentic');
                         // console.log(response);
@@ -198,10 +267,10 @@ angular.module('starter.services', [])
             }
             return promise;
         },
-      getIncome: function() {
+      getSaving: function() {
         var deferred = $q.defer();
           var data = [];
-          $http.get("http://localhost/Mine/PerFinance/www/app/getincome.php", data)
+          $http.get("http://localhost/Mine/PerFinance/www/app/getsaving.php", data)
               .success(function(response) { 
                   deferred.resolve( response);
               })
@@ -212,12 +281,11 @@ angular.module('starter.services', [])
             
         return deferred.promise;
       },
-
       getTotal: function() {          
           
           var deferred = $q.defer();
           var data = [];
-          $http.get("http://localhost/Mine/PerFinance/www/app/getincome.php", data)
+          $http.get("http://localhost/Mine/PerFinance/www/app/getsaving.php", data)
               .success(function(incomes) {
                 deferred.resolve(incomes);
               
@@ -463,6 +531,21 @@ angular.module('starter.services', [])
   }
 })
 
+.factory('AuthInterceptor', function($rootScope, $q, AUTH_EVENTS){
+  return {
+    responseError: function(response){
+      $rootScope.$broadcast({
+        401: AUTH_EVENTS.notAuthenticated,
+        403: AUTH_EVENTS.notAuthorized
+      }[response.status], response);
+      return $q.reject(response);
+    }
+  }
+})
+
+.config(function ($httpProvider) {
+  $httpProvider.interceptors.push('AuthInterceptor');   
+})
 /**
  * A simple example service that returns some data.
  */

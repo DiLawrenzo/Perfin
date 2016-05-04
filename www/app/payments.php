@@ -1,9 +1,6 @@
 <?php
 	
-	require_once('main-class.php');
-	require_once('api.php');
-
-	$h = new Budget();
+	include "checks.php";
 	
 	$postdata = file_get_contents("php://input");
 	if (isset($postdata)) {
@@ -16,7 +13,7 @@
 
 		//echo json_encode($request) ;
 	
-		$d = $h->addExpense($amount, $date, $title, $account, $notes);
+		$d = $h->addExpense($amount, $date, $title, $account, $notes, $id);
 
 		if ($d) {
 			//$ds = implode(';', $ds);

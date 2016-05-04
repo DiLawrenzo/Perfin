@@ -1,55 +1,32 @@
-<?php
 
-mysql_connect("localhost", "root", "");
+<form action="login.php" method="post">
+	<input type="text" name="name" ></input>
+	<input type="text" name="password" >
+	<input type="hidden" name="type" value="individual">
+	<input type="submit" name="login" value="SUBMIT">
+</form>
 
-//connect to db
-mysql_select_db("budgetbook");
+<h4>
+	<?php
+	
+if (isset($_POST['login'])){
+	$name = $_POST['name'];
+	$password = $_POST['password'];
+	$type = $_POST['type'];
+	$data = array($name,$password);
+	array_push($data, $type);
+	$options = array(
+	  'http' => array(
+	    'method'  => 'POST',
+	    'content' => json_encode( $data ),
+	    'header'=>  "Content-Type: application/json\r\n" .
+	                "Accept: application/json\r\n"
+	    )
+	);
 
-$id = $_REQUEST['id']; 
-
-if (!$id){
-echo "2"."<br/>Empty";
-exit();
+	$context  = stream_context_create( $options );
+	echo json_encode($data);
 }
-
-$query = "SELECT * FROM income  WHERE id='$id'";
-$login = mysql_query($query); 
-
-$count = mysql_num_rows($login);
-
-$query1 = "SELECT * FROM payments  WHERE id='$id'";
-$login2 = mysql_query($query1); 
-$totalPayments = 0;
-while ($colm1 = mysql_fetch_array($login2)){
-$totalPayments+=$colm1['total'];
-}
-
-if($count<1){
-echo "0";
-}
-
-else {
-$totalIncome = 0;
-while ($colm = mysql_fetch_array($login)){
-$totalIncome+=$colm['total'];
-}
-
-
-}
-
-
-echo "Total Income:".$totalIncome;
-print"\n";
-echo "Total payments:".$totalPayments;
-print"\n";
-
-
-$balance =$totalIncome-$totalPayments;
-echo "Balance: ".$balance;
-
-
-
-
-
 
 ?>
+</h4>

@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ionic-material', 'ionMdInput', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'ionic-material', 'ionMdInput', 'starter.controllers', 'starter.services','starter.constant'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $state, SessionService, AUTH_EVENTS) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -18,6 +18,8 @@ angular.module('starter', ['ionic', 'ionic-material', 'ionMdInput', 'starter.con
             StatusBar.styleDefault();
         }
     });
+
+    
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
@@ -96,7 +98,7 @@ angular.module('starter', ['ionic', 'ionic-material', 'ionMdInput', 'starter.con
         views: {
             'menuContent': {
                 templateUrl: 'templates/saving.html',
-                controller: 'FriendsCtrl'
+                controller: 'SavingCtrl'
             },
             'fabContent': {
                 template: '<button id="fab-account" class="button button-fab button-fab-top-right expanded button-energized-900 spin"><i class="icon ion-chatbubbles"></i></button>',
@@ -162,11 +164,11 @@ angular.module('starter', ['ionic', 'ionic-material', 'ionMdInput', 'starter.con
                 controller: 'ProfileCtrl'
             },
             'fabContent': {
-                template: '<button id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-plus"></i></button>',
+                // template: '<button id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900" ng-click="add()"><i class="icon ion-plus"></i></button>',
                 controller: function ($timeout) {
-                    /*$timeout(function () {
+                    $timeout(function () {
                         document.getElementById('fab-profile').classList.toggle('on');
-                    }, 800);*/
+                    }, 800);
                 }
             }
         }
@@ -175,4 +177,8 @@ angular.module('starter', ['ionic', 'ionic-material', 'ionMdInput', 'starter.con
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/login');
-});
+
+
+})
+
+;

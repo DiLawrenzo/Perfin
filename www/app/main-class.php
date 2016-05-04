@@ -26,7 +26,6 @@
                 $dh->execute(array(':username'=>$n, ':email'=>$e, ':password'=>$p, ':type'=>$t));
 
         	return $this->db_conn->lastInsertId();
-			
 		}
 
 		public function login($u, $p, $t) {
@@ -67,9 +66,26 @@
 					}
 					
 				}
-			
 		}
 		
+		public function userType($u, $p) {
+			$query = "SELECT usertype FROM users WHERE username = :username AND password = :password";
+
+					$sh = $this->db_conn->prepare($query);
+					$sh->setFetchMode(PDO::FETCH_ASSOC);
+					$sh->execute(array(':username'=>$u, ':password'=>$p));
+
+					$data = $sh->fetchall();
+					$_n = $sh->rowCount();
+
+					if ($_n == 1) {
+						return $data[0]['usertype'];
+					} else {
+						return false;
+
+					}
+		}
+
 		public function addprofile($n, $b) {
 
 			$query =  "UPDATE profile SET( occ_field, balance)"
@@ -80,7 +96,6 @@
                 $dh->execute(array(':occ_field'=>$n, ':bal'=>$b, ));
 
         	return $this->db_conn->lastInsertId();
-
 		}
 
 		public function addClient($n, $d, $a) {
@@ -93,36 +108,57 @@
                 $dh->execute(array(':name'=>$n, ':status'=>$d, ':account'=>$a) );
 
         	return $this->db_conn->lastInsertId();
-
 		}
 		
-		public function addAccount($n, $d, $a) {
+		public function addAccount($n, $a, $p, $c, $pd, $id) {
 
-			$query =  "INSERT INTO account (id, iname, amount, notes, date)"
-                . "VALUES (null, :name, :amount ,'waiting', :account, 0)";
-
-                $dh = $this->db_conn->prepare($query);
-
-                $dh->execute(array(':name'=>$n, ':status'=>$d, ':account'=>$a) );
-
-        	return $this->db_conn->lastInsertId();
-
-		}
-
-		public function addIncome($n, $a, $p, $c, $pd) {
-
-			$query =  "INSERT INTO income (id, iname, amount, notes, account, date)"
-                . "VALUES (null, :title, :amount, :notes, :account, :date)";
+			$query =  "INSERT INTO accounts (id, ename, amount, notes, account, date, user_id)"
+                . "VALUES (null, :title, :amount, :notes, :account, :date, :id)";
 
                 $dh = $this->db_conn->prepare($query);
 
-                $dh->execute(array(':amount'=>$n, ':date'=>$a, ':account'=>$c, ':title'=>$p,':notes'=>$pd));
+                $dh->execute(array(':amount'=>$n, ':date'=>$a, ':account'=>$c, ':title'=>$p,':notes'=>$pd, ':id'=>$id));
 
                 return $this->db_conn->lastInsertId();
-            }
+		}
 
-        public function getIncome() {
-            $query2 = "SELECT * FROM income";
+		public function addIncome($n, $a, $p, $c, $pd, $id) {
+
+			$query =  "INSERT INTO income (id, ename, amount, notes, account, date, user_id)"
+                . "VALUES (null, :title, :amount, :notes, :account, :date, :id)";
+
+                $dh = $this->db_conn->prepare($query);
+
+                $dh->execute(array(':amount'=>$n, ':date'=>$a, ':account'=>$c, ':title'=>$p,':notes'=>$pd, ':id'=>$id));
+
+                return $this->db_conn->lastInsertId();
+        }
+
+        public function addExpense($n, $a, $p, $c, $pd, $id) {
+
+			$query =  "INSERT INTO expense (id, ename, amount, notes, account, date, user_id)"
+                . "VALUES (null, :title, :amount, :notes, :account, :date, :id)";
+
+                $dh = $this->db_conn->prepare($query);
+
+                $dh->execute(array(':amount'=>$n, ':date'=>$a, ':account'=>$c, ':title'=>$p,':notes'=>$pd, ':id'=>$id));
+
+                return $this->db_conn->lastInsertId();
+		}
+
+		public function addSaving($n, $a, $p, $c, $pd, $id ) {
+			$query =  "INSERT INTO saving (id, ename, amount, notes, account, date, user_id)"
+                . "VALUES (null, :title, :amount, :notes, :account, :date, :id)";
+
+                $dh = $this->db_conn->prepare($query);
+
+                $dh->execute(array(':amount'=>$n, ':date'=>$a, ':account'=>$c, ':title'=>$p,':notes'=>$pd, ':id'=>$id));
+
+                return $this->db_conn->lastInsertId();
+		}
+
+        public function getIncome($id) {
+            $query2 = "SELECT * FROM income WHERE user_id = '$id' ";
 
 					$sh = $this->db_conn->prepare($query2);
 					$sh->setFetchMode(PDO::FETCH_ASSOC);
@@ -131,13 +167,47 @@
 					$data = $sh->fetchall();
 					
         			return $data;
-        
-		}
+        }
 
-		public function getExpenseToday() {
+        public function getExpense($id) {
+            $query2 = "SELECT * FROM expense WHERE user_id = '$id' ";
+
+					$sh = $this->db_conn->prepare($query2);
+					$sh->setFetchMode(PDO::FETCH_ASSOC);
+					$sh->execute();
+
+					$data = $sh->fetchall();
+					
+        			return $data;
+        }
+
+		public function getAccount($id) {
+            $query2 = "SELECT * FROM accounts WHERE user_id = '$id' ";
+
+					$sh = $this->db_conn->prepare($query2);
+					$sh->setFetchMode(PDO::FETCH_ASSOC);
+					$sh->execute();
+
+					$data = $sh->fetchall();
+					
+        			return $data;
+        }
+
+        public function getSaving($id) {
+        	$query2 = "SELECT * FROM saving WHERE user_id = '$id' ";
+
+					$sh = $this->db_conn->prepare($query2);
+					$sh->setFetchMode(PDO::FETCH_ASSOC);
+					$sh->execute();
+
+					$data = $sh->fetchall();
+					
+        			return $data;
+        }
+		public function getExpenseToday($id) {
 			$today=date('Y-m-d');
 			//var_dump($today);
-            $query = "SELECT SUM(amount) FROM expense where date='$today'";
+            $query = "SELECT SUM(amount) FROM expense where date='$today' AND user_id = '$id' ";
 
 					$sh = $this->db_conn->prepare($query);
 					$sh->setFetchMode(PDO::FETCH_ASSOC);
@@ -146,13 +216,12 @@
 					$data = $sh->fetchall();
 									
         			return $data;
-        
-		}
+        }
 
-		public function getIncomeToday() {
+		public function getIncomeToday($id) {
             $today=date('Y-m-d');
 			//var_dump($today);
-            $query = "SELECT SUM(amount) FROM income where date='$today'";
+            $query = "SELECT SUM(amount) FROM income where date='$today' && user_id = '$id' ";
 
 					$sh = $this->db_conn->prepare($query);
 					$sh->setFetchMode(PDO::FETCH_ASSOC);
@@ -161,35 +230,8 @@
 					$data = $sh->fetchall();
 							
         			return $data;
-        
-		}
+        }
 
-		public function getExpense() {
-            $query2 = "SELECT * FROM expense";
-
-					$sh = $this->db_conn->prepare($query2);
-					$sh->setFetchMode(PDO::FETCH_ASSOC);
-					$sh->execute();
-
-					$data = $sh->fetchall();
-					
-        			return $data;
-        
-
-		}
-		
-		public function addExpense($n, $a, $p, $c, $pd ) {
-
-			$query =  "INSERT INTO expense (id, ename, amount, notes, account, date)"
-                . "VALUES (null, :title, :amount, :notes, :account, :date)";
-
-                $dh = $this->db_conn->prepare($query);
-
-                $dh->execute(array(':amount'=>$n, ':date'=>$a, ':account'=>$c, ':title'=>$p,':notes'=>$pd));
-
-                return $this->db_conn->lastInsertId();
-		}
-		
 		public function addJobs($id, $description, $date ) {
 			$selQuery1 = "SELECT supp_id FROM supplier WHERE id = $id";
 			$sh = $this->db_conn->prepare($selQuery1);
@@ -223,7 +265,6 @@
             $dh->execute(array(':supp'=>$s, ':client'=>$c, ':prod'=>$p, ':description'=>$description,  ':date'=>$date));
 
         	return $this->db_conn->lastInsertId();
-
 		}
 		
 		public function addJob($t, $desc ) {
@@ -236,9 +277,7 @@
             $dh->execute(array(':title'=>$t, ':descrip'=>$desc));
 
         	return $this->db_conn->lastInsertId();
-
 		}
-
 				
 		public function readBalance($id) {
 
@@ -251,7 +290,7 @@
 			$data = $sh->fetchall();
 	        $user = $data[0];
 
-	        $selQuery1 = "SELECT amount FROM expense";
+	        $selQuery1 = "SELECT SELECT SUM(amount) FROM expense";
 			$sh = $this->db_conn->prepare($selQuery1);
 			$sh->setFetchMode(PDO::FETCH_ASSOC);
 			$sh->execute();
@@ -274,7 +313,6 @@
 			}
 
 			$bal = $totalb - $totale;
-
 		}
 
 		public function standcharge($d, $st, $a){
@@ -291,7 +329,6 @@
 			}
 		}
 
-
 		public function readProfile($id) {
 
 			$query = "SELECT id, name, email FROM profile WHERE id= :id";
@@ -303,7 +340,6 @@
 			$data = $sh->fetchall();
 
 	        return $data[0];
-
 		}
 
 		public function readMyJobs($id) {
@@ -317,7 +353,6 @@
 			$data = $sh->fetchall();
 
 	        return $data;
-
 		}
 
 		public function readAllJobs() {
@@ -331,11 +366,9 @@
 			$data = $sh->fetchall();
 
 	        return $data;
-
 		}
 
 		public function updateProf($id, $upd) {
-
 			foreach ($upd as $key => $value) {
 				
 				if (!empty($value)) {
@@ -442,7 +475,6 @@
 			$sh = $this->db_conn->prepare($query);
 			$sh->execute();
 			return true;
-
 		}
 
 		public function deleteJob($id) {
@@ -451,7 +483,6 @@
 			$sh = $this->db_conn->prepare($query);
 			$sh->execute();
 			return true;
-
 		}
 
 		public function deleteExp($id) {
@@ -460,7 +491,6 @@
 			$sh = $this->db_conn->prepare($query);
 			$sh->execute();
 			return true;
-
 		}
 
 		public function deleteIncome($id) {
@@ -469,7 +499,6 @@
 			$sh = $this->db_conn->prepare($query);
 			$sh->execute();
 			return true;
-
 		}
 
 		public function deleteClient($id) {
@@ -478,7 +507,6 @@
 			$sh = $this->db_conn->prepare($query);
 			$sh->execute();
 			return true;
-
 		}
 
 		public function deleteAccount($id) {
@@ -487,33 +515,6 @@
 			$sh = $this->db_conn->prepare($query);
 			$sh->execute();
 			return true;
-
 		}
-		
-		public function givPoints($id, $publisher, $photo) {
-
-			$selQuery = "SELECT points FROM users WHERE id = $id";
-			$sh = $this->db_conn->prepare($selQuery);
-			$sh->setFetchMode(PDO::FETCH_ASSOC);
-			$sh->execute();
-
-			$d = $sh->fetchall();
-			$p = $p + $d[0]['points'];
-
-			$updQuery = "UPDATE users SET points = $p WHERE id = $id";
-			$dh = $this->db_conn->prepare($updQuery);
-			$dh->execute();
-			
-			return true;
-		}
-
-		public function updateDp($id, $dp) {
-			$query = "UPDATE profile SET dp = :dp WHERE id = $id";
-			$sh = $this->db_conn->prepare($query);
-			$sh->execute(array(':dp'=>$dp));
-
-			return true;
-		}
-
 	}
 ?>

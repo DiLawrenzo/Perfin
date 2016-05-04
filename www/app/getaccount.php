@@ -1,12 +1,9 @@
 <?php
   
-  require_once('main-class.php');
-  require_once('api.php');
-
-  $h = new Budget();
+  include "checks.php";
   
-  
-    $ds = $h->getAccount();
+  	
+    $ds = $h->getAccount($id);
 
     if ($ds) {
       //$ds = implode(';', $ds);

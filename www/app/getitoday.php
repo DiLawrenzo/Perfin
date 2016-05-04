@@ -1,12 +1,8 @@
 <?php
 	
-	require_once('main-class.php');
-	require_once('api.php');
-
-	$h = new Budget();
+	include "checks.php";
 	
-	
-		$ds = $h->getIncomeToday();
+		$ds = $h->getIncomeToday($id);
 		$ds = (int)$ds[0]["SUM(amount)"] ;
 
 		if ($ds) {			

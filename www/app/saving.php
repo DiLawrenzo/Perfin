@@ -8,25 +8,25 @@
 		$amount = $request->amount;
 		$date =  $request->date;
 		$title = $request->title;
-		$type = $request->type;
+		$account = $request->account;
 		$notes = $request->notes;
 
 		//echo json_encode($request) ;
 	
-		$d = $h->addAccount($amount, $date, $title, $type, $notes, $id);
+		$d = $h->addSaving($amount, $date, $title, $account, $notes, $id);
 
 		if ($d) {
 			//$ds = implode(';', $ds);
 			echo json_encode($d) ;
 
 		} else {
-		echo json_encode("Error in adding Account") ;
+		echo json_encode("Error in adding Saving") ;
 
 		}
 
 	} else {
 		
-		echo json_encode("Error in getting Account data") ;
+		echo json_encode("Error in getting Saving data") ;
  }
 	
 ?>

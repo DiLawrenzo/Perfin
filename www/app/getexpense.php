@@ -1,19 +1,16 @@
 <?php
 	
-	require_once('main-class.php');
-	require_once('api.php');
-
-	$h = new Budget();
+	include "checks.php";
 	
-	
-		$ds = $h->getExpense();
+	//echo $id;
+		$ds = $h->getExpense($id);
 
 		if ($ds) {
 			//$ds = implode(';', $ds);
 			echo json_encode($ds) ;
 
 		} else {
-		echo json_encode("Error in getting Expenses") ;
+		echo json_encode("0") ;
 
 		}
 
