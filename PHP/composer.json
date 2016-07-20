@@ -1,7 +1,0 @@
-{
-    "require": {
-        "slim/slim": "^3.0",
-        "PHP": "^3.0",
-        "palanik/corsslim": "*"
-    }
-}
